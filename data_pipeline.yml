@@ -13,20 +13,31 @@ jobs:
       - name: Checkout repo content
         uses: actions/checkout@v4
         
-      - name: Setup python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.9'
           cache: 'pip'
+
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Run data pipeline
 
-        run: python GJCODE.ipynb # run data pipeline
-      - name: Check for changes # create env variable indicating if any changes were made
+      - name: Run data pipeline
+        run: |
+          pip install nbconvert
+          jupyter nbconvert --to script GJCODE.ipynb
+          python GJCODE.py # Convert the notebook to a Python script and run it
+
+      - name: Check for changes
         id: git-check
         run: |
           git config user.name 'github-actions'
           git config user.email 'github-actions@github.com'
           git add .
-          git diff --staged --quiet || echo "changes=true" >> $GITHUB_ENV 
+          git diff --staged --quiet || echo "changes=true" >> $GITHUB_ENV
+
+      - name: Commit and push changes if there are any
+        if: env.changes == 'true'
+        run: |
+          git commit -m "Update data pipeline output"
+          git push
