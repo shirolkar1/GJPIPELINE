@@ -36,3 +36,8 @@ jobs:
         run: |
           git commit -m "Update data pipeline output"
           git push
+
+      - name: Run simple script
+        run: |
+          echo "Creating data and calculating total age"
+          python -c "
