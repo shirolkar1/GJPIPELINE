@@ -22,11 +22,6 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run data pipeline
-        run: |
-          pip install nbconvert
-          jupyter nbconvert --to script GJCODE.ipynb
-          python GJCODE.py # Convert the notebook to a Python script and run it
 
       - name: Check for changes
         id: git-check
